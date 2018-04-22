@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen as uReq
+import re
 
 my_url = "http://www.espn.com/nfl/playbyplay?gameId=400951580"
 
@@ -16,7 +17,7 @@ for container in containers:
     new_score = {}
     new_score["type"] = container.findAll("div", {"class": "score-type"})[0].text
     headline = container.findAll("div", {"class": "headline"})[0].text
-    new_score["player"] = re.search('^\D+').group(0).strip
+    new_score["player"] = re.search('^\D+', headline).group(0).strip()
     new_score["yards"] = re.search('\d+\sYd', headline).group(0).split()[0]
 
     print(new_score)
