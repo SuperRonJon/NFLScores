@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen as uReq
 import re
+import json
 
 my_url = "http://www.espn.com/nfl/playbyplay?gameId=400951580"
 
@@ -35,3 +36,5 @@ for container in containers:
     scoring_plays.append(new_score)
 
 print_scores(scoring_plays)
+with open("stats.json", "w") as writeJSON:
+    json.dump(scoring_plays, writeJSON)
