@@ -19,5 +19,16 @@ for container in containers:
     headline = container.findAll("div", {"class": "headline"})[0].text
     new_score["player"] = re.search('^\D+', headline).group(0).strip()
     new_score["yards"] = re.search('\d+\sYd', headline).group(0).split()[0]
+    if new_score['type'] == 'TD':
+        _ , kick = headline.split('(')
+        kick = kick.strip(')')
+        kicker, result = kick.rsplit(' ', 1)
+        if result == 'Kick':
+            kick_score = {}
+            kick_score["type"] = 'PAT'
+            kick_score["player"] = kicker
+            kick_score["yards"] = 'NA'
+            scoring_plays.append(kick_score)
+    scoring_plays.append(new_score)
 
-    print(new_score)
+print(scoring_plays)
