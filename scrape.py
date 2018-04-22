@@ -12,6 +12,9 @@ containers = page_soup.findAll("td", {"class": "game-details"})
 
 scoring_plays = []
 
+def print_scores(scores):
+    for score in scores:
+        print("{} by {} for {} Yards".format(score["type"], score["player"], score["yards"]))
 
 for container in containers:
     new_score = {}
@@ -31,4 +34,4 @@ for container in containers:
             scoring_plays.append(kick_score)
     scoring_plays.append(new_score)
 
-print(scoring_plays)
+print_scores(scoring_plays)
