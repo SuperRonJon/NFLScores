@@ -91,10 +91,15 @@ def parse_play(container):
         new_score["passer"] = "NA"
     scores.append(new_score)
     return scores
+
+
+def get_match_scores(gameId):
+    scoring_plays = retrieve_data(get_match_containers(gameId))
+    return scoring_plays
   
 #gets all the score data from the game
-scoring_plays = retrieve_data(get_match_containers(400951597))
+scores = get_match_scores(400951597)
 #print found scores to console and write to .json file
-print_scores(scoring_plays)
+print_scores(scores)
 with open("stats.json", "w") as writeJSON:
-    json.dump(scoring_plays, writeJSON, sort_keys=True, indent=4)
+    json.dump(scores, writeJSON, sort_keys=True, indent=4)
