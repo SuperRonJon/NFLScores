@@ -95,4 +95,4 @@ scoring_plays = retrieve_data(containers)
 #print found scores to console and write to .json file
 print_scores(scoring_plays)
 with open("stats.json", "w") as writeJSON:
-    json.dump(scoring_plays, writeJSON)
+    json.dump(scoring_plays, writeJSON, sort_keys=True, indent=4)
