@@ -13,8 +13,6 @@ uClient.close()
 page_soup = soup(page_html, "html.parser")
 containers = page_soup.findAll("td", {"class": "game-details"})
 
-#Array to store the scores in
-scoring_plays = []
 
 #prints the cores in a readable way for testing purposes
 def print_scores(scores):
@@ -32,8 +30,20 @@ def print_scores(scores):
         else:
             print("{} by {} for {} Yards".format(score["type"], score["player"], score["yards"]))
 
-#loops through each score and extracts the data
-for container in containers:
+
+#retrieves all the scoring plays from a single match
+#returns a list of objects containing the plays data
+def retrieve_data(containers):
+    scoring_plays = []
+    for container in containers:
+        new_scores = parse_play(container)
+        scoring_plays.extend(new_scores)
+    return scoring_plays
+
+#parses the data from one scoring play
+#returns a list of plays obtained from a single score (e.g. a Touchdown + an Extra Point)
+def parse_play(container):
+    scores = []
     new_score = {}
     no_kick = False
     new_score["type"] = container.findAll("div", {"class": "score-type"})[0].text
@@ -63,21 +73,24 @@ for container in containers:
             new_score["passer"] = "NA"
         if not no_kick:
             _ , kick = headline.split('(')
-        kick = kick.strip(')')
-        kicker, result = kick.rsplit(' ', 1)
-        #If the point after attempt is successful, record the kicker that scored as a PAT type
-        if result == 'Kick':
-            kick_score = {}
-            kick_score["type"] = 'PAT'
-            kick_score["player"] = kicker
-            kick_score["yards"] = 'NA'
-            kick_score["play_type"] = "PAT"
-            scoring_plays.append(kick_score)
+            kick = kick.strip(')')
+            kicker, result = kick.rsplit(' ', 1)
+            #If the point after attempt is successful, record the kicker that scored as a PAT type
+            if result == 'Kick':
+                kick_score = {}
+                kick_score["type"] = 'PAT'
+                kick_score["player"] = kicker
+                kick_score["yards"] = 'NA'
+                kick_score["play_type"] = "PAT"
+                scores.append(kick_score)
     else:
         new_score["play_type"] = new_score["type"]
         new_score["passer"] = "NA"
-    scoring_plays.append(new_score)
-
+    scores.append(new_score)
+    return scores
+  
+#gets all the score data from the game
+scoring_plays = retrieve_data(containers)
 #print found scores to console and write to .json file
 print_scores(scoring_plays)
 with open("stats.json", "w") as writeJSON:
