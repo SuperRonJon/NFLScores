@@ -79,6 +79,7 @@ def parse_play(container):
             #If the point after attempt is successful, record the kicker that scored as a PAT type
             if result == 'Kick':
                 kick_score = {}
+                kick_score["passer"] = "NA"
                 kick_score["type"] = 'PAT'
                 kick_score["player"] = kicker
                 kick_score["yards"] = 'NA'
