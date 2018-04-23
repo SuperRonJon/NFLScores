@@ -1,1 +1,6 @@
 stats.json
+__pycache__
+build/
+dist/
+*.pyc
+*.pyo
