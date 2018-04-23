@@ -15,7 +15,7 @@ def get_match_containers(gameId):
 
 
 #retrieves all the scoring plays from a single match
-#returns a list of objects containing the plays data
+#returns a list of objects containing the html plays data
 def retrieve_data(containers):
     scoring_plays = []
     for container in containers:
