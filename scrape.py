@@ -26,7 +26,7 @@ def print_scores(scores):
         elif score["type"] == "PAT":
             print("{} good by {}".format(score["type"], score["player"]))
         elif score["type"] == "SF":
-            print("Safety by {}.".format(score["player"]))
+            print("Safety by {}".format(score["player"]))
         else:
             print("{} by {} for {} Yards".format(score["type"], score["player"], score["yards"]))
 
@@ -50,10 +50,11 @@ def parse_play(container):
     headline = container.findAll("div", {"class": "headline"})[0].text
     if headline[-1] != ")":
         no_kick = True
-    new_score["player"] = re.search('^\D+', headline).group(0).strip()
     if new_score["type"] != "SF":
+        new_score["player"] = re.search('^\D+', headline).group(0).strip()
         new_score["yards"] = re.search('\d+\sYd', headline).group(0).split()[0]
     else:
+        new_score["player"] = re.search('\D+?(?=\sSafety)',headline).group(0)
         new_score["yards"] = "NA"
     #if the score was a touchdown, extract extra information
     if new_score['type'] == 'TD':
