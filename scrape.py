@@ -4,7 +4,7 @@ import re
 import json
 
 #Temporary url for testing
-my_url = "http://www.espn.com/nfl/playbyplay?gameId=400951580"
+my_url = "http://www.espn.com/nfl/game?gameId=400951597"
 
 #Connecting client and downloading page
 uClient = uReq(my_url)
@@ -27,6 +27,8 @@ def print_scores(scores):
             print("{} pass from {} to {} for {} Yards".format(score["type"], score["passer"], score["player"], score["yards"]))
         elif score["type"] == "PAT":
             print("{} good by {}".format(score["type"], score["player"]))
+        elif score["type"] == "SF":
+            print("Safety by {}.".format(score["player"]))
         else:
             print("{} by {} for {} Yards".format(score["type"], score["player"], score["yards"]))
 
@@ -36,10 +38,14 @@ for container in containers:
     new_score["type"] = container.findAll("div", {"class": "score-type"})[0].text
     headline = container.findAll("div", {"class": "headline"})[0].text
     new_score["player"] = re.search('^\D+', headline).group(0).strip()
-    new_score["yards"] = re.search('\d+\sYd', headline).group(0).split()[0]
+    if new_score["type"] != "SF":
+        new_score["yards"] = re.search('\d+\sYd', headline).group(0).split()[0]
+    else:
+        new_score["yards"] = "NA"
     #if the score was a touchdown, extract extra information
     if new_score['type'] == 'TD':
         #gets whether the TD was a run/pass
+        print("headline: ", headline)
         new_score["play_type"] = re.search('Yd\s(\w*)\s', headline).group(1).lower()
         #if the touchdown was a pass, get the passer information
         if new_score["play_type"] == "pass":
@@ -60,6 +66,7 @@ for container in containers:
             scoring_plays.append(kick_score)
     else:
         new_score["play_type"] = new_score["type"]
+        new_score["passer"] = "NA"
     scoring_plays.append(new_score)
 
 #print found scores to console and write to .json file
