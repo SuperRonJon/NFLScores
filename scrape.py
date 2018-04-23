@@ -35,8 +35,11 @@ def print_scores(scores):
 #loops through each score and extracts the data
 for container in containers:
     new_score = {}
+    no_kick = False
     new_score["type"] = container.findAll("div", {"class": "score-type"})[0].text
     headline = container.findAll("div", {"class": "headline"})[0].text
+    if headline[-1] != ")":
+        no_kick = True
     new_score["player"] = re.search('^\D+', headline).group(0).strip()
     if new_score["type"] != "SF":
         new_score["yards"] = re.search('\d+\sYd', headline).group(0).split()[0]
@@ -45,15 +48,21 @@ for container in containers:
     #if the score was a touchdown, extract extra information
     if new_score['type'] == 'TD':
         #gets whether the TD was a run/pass
-        print("headline: ", headline)
-        new_score["play_type"] = re.search('Yd\s(\w*)\s', headline).group(1).lower()
+        if not no_kick:
+            new_score["play_type"] = re.search('Yd\s(\w*)\s', headline).group(1).lower()
+        else:
+            new_score["play_type"] = re.search('Yd\s(\w*)$', headline).group(1).lower()
         #if the touchdown was a pass, get the passer information
         if new_score["play_type"] == "pass":
             #extract passer information
-            new_score["passer"] = re.search('from\s(\D*)\s\(', headline).group(1)
+            if not no_kick:
+                new_score["passer"] = re.search('from\s(\D*)\s\(', headline).group(1)
+            else:
+                new_score["passer"] = re.search('from\s(\D*)$', headline).group(1)
         else:
             new_score["passer"] = "NA"
-        _ , kick = headline.split('(')
+        if not no_kick:
+            _ , kick = headline.split('(')
         kick = kick.strip(')')
         kicker, result = kick.rsplit(' ', 1)
         #If the point after attempt is successful, record the kicker that scored as a PAT type
