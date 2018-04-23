@@ -3,15 +3,16 @@ from urllib.request import urlopen as uReq
 import re
 import json
 
-#Temporary url for testing
-my_url = "http://www.espn.com/nfl/game?gameId=400951597"
 
-#Connecting client and downloading page
-uClient = uReq(my_url)
-page_html = uClient.read()
-uClient.close()
-page_soup = soup(page_html, "html.parser")
-containers = page_soup.findAll("td", {"class": "game-details"})
+def get_match_containers(gameId):
+    #connecting to client and downloading page information
+    match_url = "http://www.espn.com/nfl/game?gameId=" + str(gameId)
+    uClient = uReq(match_url)
+    page_html = uClient.read()
+    uClient.close()
+    page_soup = soup(page_html, "html.parser")
+    containers = page_soup.findAll("td", {"class": "game-details"})
+    return containers
 
 
 #prints the cores in a readable way for testing purposes
@@ -92,7 +93,7 @@ def parse_play(container):
     return scores
   
 #gets all the score data from the game
-scoring_plays = retrieve_data(containers)
+scoring_plays = retrieve_data(get_match_containers(400951597))
 #print found scores to console and write to .json file
 print_scores(scoring_plays)
 with open("stats.json", "w") as writeJSON:
