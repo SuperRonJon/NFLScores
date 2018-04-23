@@ -23,5 +23,5 @@ def print_scores(scores):
 scores = get_match_scores(400951597)
 #print found scores to console and write to .json file
 print_scores(scores)
-with open('stats.json', 'w') as writeJSON:
+with open('../stats.json', 'w') as writeJSON:
     json.dump(scores, writeJSON, sort_keys=True, indent=4)
