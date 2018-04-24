@@ -18,10 +18,23 @@ def print_scores(scores):
         else:
             print('{} by {} for {} Yards'.format(score['type'], score['player'], score['yards']))
 
-  
+
+def write_to_json(scores, filename):
+    with open('../output/' + filename, 'w') as writeJSON:
+        json.dump(scores, writeJSON, sort_keys=True, indent=4)
+
+
+def write_to_csv(scores, filename):
+    f = open('../output/' + filename, 'w')
+    headers = "player, type, yards, play type, passer\n"
+    f.write(headers)
+    for score in scores:
+        f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
+    f.close()
+
 #gets all the score data from the game
 scores = get_match_scores(400951597)
-#print found scores to console and write to .json file
+#print found scores to console and write to .json and .csv file
 print_scores(scores)
-with open('../stats.json', 'w') as writeJSON:
-    json.dump(scores, writeJSON, sort_keys=True, indent=4)
+write_to_json(scores, 'stats.json')
+write_to_csv(scores, 'stats.csv')
