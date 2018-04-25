@@ -57,6 +57,9 @@ def parse_play(container):
                 new_score['passer'] = re.search('from\s(\D*)$', headline).group(1)
         else:
             new_score['passer'] = 'NA'
+        #add extra information to other touchdown types
+        if new_score['play_type'] != 'run' and new_score['play_type'] != 'pass':
+            new_score['play_type'] += ' return'
         if not no_kick:
             _ , kick = headline.split('(')
             kick = kick.strip(')')
