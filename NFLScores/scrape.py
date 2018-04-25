@@ -1,5 +1,5 @@
 import json
-from match_parsing import get_match_scores
+from match_parsing import get_match_scores, get_week_scores
 
 
 #prints the cores in a readable way for testing purposes
@@ -32,9 +32,9 @@ def write_to_csv(scores, filename):
         f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
     f.close()
 
-#gets all the score data from the game
-scores = get_match_scores(400951597)
+#gets all the score data from the week
+scores = get_week_scores(2017, 2)
 #print found scores to console and write to .json and .csv file
-print_scores(scores)
+get_week_scores(2017, 2)
 write_to_json(scores, 'stats.json')
 write_to_csv(scores, 'stats.csv')
