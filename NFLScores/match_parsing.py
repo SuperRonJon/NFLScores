@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen as uReq
 import re
+import requests
 
 
 def get_match_containers(gameId):
@@ -78,4 +79,25 @@ def parse_play(container):
 
 def get_match_scores(gameId):
     scoring_plays = retrieve_data(get_match_containers(gameId))
+    return scoring_plays
+
+
+#gets all match ids from a specified NFL week via espn APIs
+def get_match_ids(year, week):
+    id_url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?lang=en&region=us&calendartype=blacklist&limit=100&dates=' + str(year) + '&seasontype=2&week=' + str(week) 
+    response = requests.get(id_url)
+    data = response.json()
+    gameIds = []
+    for event in data['events']:
+        gameIds.append(event['id'])
+    return gameIds
+
+
+#gets all scoring plays from an entire week of NFL games
+def get_week_scores(year, week):
+    ids = get_match_ids(year, week)
+    scoring_plays = []
+    for id in ids:
+        scoring_plays.extend(get_match_scores(id))
+    
     return scoring_plays
