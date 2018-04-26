@@ -73,6 +73,23 @@ def parse_play(container):
                 kick_score['yards'] = 'NA'
                 kick_score['play_type'] = 'PAT'
                 scores.append(kick_score)
+            #if the point after attempt is a 2 point conversion, calculate a new score for that
+            elif result == 'Conversion':
+                conversion_score = {}
+                conversion_score['type'] = '2PtConv'
+                conversion_score['yards'] = 'NA'
+                player1 = re.search('(\D+)(?:Run|Pass)', kick).group(1).strip()
+                player_removed = kick[len(player1):].strip()
+                conversion_score['play_type'] = player_removed.split(' ', 1)[0].lower()
+                #if the conversion attempt was a passing play, figure out the passer and reciever
+                if conversion_score['play_type'] == 'pass':
+                    conversion_score['passer'] = player1
+                    conversion_score['player'] = re.search('to\s(\D+)\sfor',kick).group(1)
+                #if it was a run, there is no passer
+                else:
+                    conversion_score['passer'] = 'NA'
+                    conversion_score['player'] = player1
+                scores.append(conversion_score)
     else:
         new_score['play_type'] = new_score['type']
         new_score['passer'] = 'NA'
@@ -81,7 +98,6 @@ def parse_play(container):
 
 
 def get_match_scores(gameId):
-    print('gameID: ' + gameId)
     scoring_plays = retrieve_data(get_match_containers(gameId))
     return scoring_plays
 
