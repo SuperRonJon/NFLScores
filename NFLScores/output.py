@@ -20,7 +20,7 @@ def print_scores(scores):
 
 
 def write_to_json(scores, filename):
-    with open('../output/' + filename, 'w') as writeJSON:
+    with open(filename, 'w') as writeJSON:
         json.dump(scores, writeJSON, sort_keys=True, indent=4)
 
 
