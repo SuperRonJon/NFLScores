@@ -47,7 +47,7 @@ def parse_play(container):
         if not no_kick:
             new_score['play_type'] = re.search('Yd\s(\w*)\s', headline).group(1).lower()
         else:
-            new_score['play_type'] = re.search('Yd\s(\w*)$', headline).group(1).lower()
+            new_score['play_type'] = re.search('Yd\s(\w*)', headline).group(1).lower()
         #if the touchdown was a pass, get the passer information
         if new_score['play_type'] == 'pass':
             #extract passer information
@@ -81,6 +81,7 @@ def parse_play(container):
 
 
 def get_match_scores(gameId):
+    print('gameID: ' + gameId)
     scoring_plays = retrieve_data(get_match_containers(gameId))
     return scoring_plays
 
