@@ -25,9 +25,16 @@ def write_to_json(scores, filename):
 
 
 def write_to_csv(scores, filename):
-    f = open('../output/' + filename, 'w')
+    f = open(filename, 'w')
     headers = "player, type, yards, play type, passer\n"
     f.write(headers)
+    for score in scores:
+        f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
+    f.close()
+
+
+def append_to_csv(scores, filename):
+    f = open(filename, 'a')
     for score in scores:
         f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
     f.close()
