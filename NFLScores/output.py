@@ -31,10 +31,3 @@ def write_to_csv(scores, filename):
     for score in scores:
         f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
     f.close()
-
-#gets all the score data from the week
-scores = get_week_scores(2017, 2)
-#print found scores to console and write to .json and .csv file
-get_week_scores(2017, 2)
-write_to_json(scores, 'stats.json')
-write_to_csv(scores, 'stats.csv')
