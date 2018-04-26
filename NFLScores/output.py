@@ -32,7 +32,7 @@ def write_to_csv(scores, filename, append=False):
     
     if not append:
         headers = "player, type, yards, play type, passer\n"
-    f.write(headers)
+        f.write(headers)
     for score in scores:
         f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
     f.close()
