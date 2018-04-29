@@ -31,20 +31,30 @@ def parse_play(container):
     scores = []
     new_score = {}
     no_kick = False
+    no_yards = False
     new_score['type'] = container.findAll('div', {'class': 'score-type'})[0].text
     headline = container.findAll('div', {'class': 'headline'})[0].text
     if headline[-1] != ')':
         no_kick = True
     if new_score['type'] != 'SF':
-        new_score['player'] = re.search('^\D+', headline).group(0).strip()
-        new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
+        player_result = re.search('^(\D+)(?:\d|Interception|Fumble)', headline)
+        #if the play was an interception or fumble in the endzone there are no yards
+        if player_result.group(0).split()[-1] == 'Interception' or player_result.group(0).split()[-1] == 'Fumble':
+            new_score['yards'] = 'NA'
+            no_yards = True
+            no_yards_type = player_result.group(0).split()[-1].lower()
+        else:
+            new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
+        new_score['player'] = player_result.group(1).strip()
     else:
         new_score['player'] = re.search('\D+?(?=\sSafety)',headline).group(0)
         new_score['yards'] = 'NA'
     #if the score was a touchdown, extract extra information
     if new_score['type'] == 'TD':
         #gets whether the TD was a run/pass
-        if not no_kick:
+        if no_yards:
+            new_score['play_type'] = no_yards_type
+        elif not no_kick:
             new_score['play_type'] = re.search('Yd\s(\w*)\s', headline).group(1).lower()
         else:
             new_score['play_type'] = re.search('Yd\s(\w*)', headline).group(1).lower()
@@ -104,7 +114,7 @@ def get_match_scores(gameId):
 
 #gets all match ids from a specified NFL week via espn APIs
 def get_match_ids(year, week):
-    id_url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?lang=en&region=us&calendartype=blacklist&limit=100&dates=' + str(year) + '&seasontype=2&week=' + str(week) 
+    id_url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?lang=en&region=us&calendartype=blacklist&limit=100&dates=' + str(year) + '&seasontype=2&week=' + str(week)
     response = requests.get(id_url)
     data = response.json()
     gameIds = []
@@ -119,5 +129,5 @@ def get_week_scores(year, week):
     scoring_plays = []
     for id in ids:
         scoring_plays.extend(get_match_scores(id))
-    
+
     return scoring_plays
