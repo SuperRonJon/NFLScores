@@ -6,4 +6,5 @@ dist/
 *.pyo
 output/
 main.py
+main2.py
 *.spec
