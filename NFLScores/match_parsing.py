@@ -131,7 +131,6 @@ def get_week_scores(year, week):
     ids = get_match_ids(year, week)
     scoring_plays = []
     for id in ids:
-        print('GameID: ' + str(id))
         scoring_plays.extend(get_match_scores(id))
 
     return scoring_plays
