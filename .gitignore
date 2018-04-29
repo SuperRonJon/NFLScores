@@ -6,4 +6,4 @@ dist/
 *.pyo
 output/
 main.py
-main.spec
+*.spec
