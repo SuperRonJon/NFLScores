@@ -37,12 +37,15 @@ def parse_play(container):
     if headline[-1] != ')':
         no_kick = True
     if new_score['type'] != 'SF':
-        player_result = re.search('^(\D+)(?:\d|Interception|Fumble)', headline)
+        player_result = re.search('^(\D+)(?:\d|Interception|Fumble|Defensive)', headline)
         #if the play was an interception or fumble in the endzone there are no yards
         if player_result.group(0).split()[-1] == 'Interception' or player_result.group(0).split()[-1] == 'Fumble':
             new_score['yards'] = 'NA'
             no_yards = True
             no_yards_type = player_result.group(0).split()[-1].lower()
+        elif player_result.group(0).split()[-1] == 'Defensive':
+            new_score['yards'] = 'NA'
+            no_yards = True
         else:
             new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
         new_score['player'] = player_result.group(1).strip()
@@ -128,6 +131,7 @@ def get_week_scores(year, week):
     ids = get_match_ids(year, week)
     scoring_plays = []
     for id in ids:
+        print('GameID: ' + str(id))
         scoring_plays.extend(get_match_scores(id))
 
     return scoring_plays
