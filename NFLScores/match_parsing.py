@@ -3,7 +3,7 @@ from urllib.request import urlopen as uReq
 import re
 import requests
 
-
+#get all the containers on the page that include information on each score
 def get_match_containers(gameId):
     #connecting to client and downloading page information
     match_url = 'http://www.espn.com/nfl/game?gameId=' + str(gameId)
@@ -110,6 +110,7 @@ def parse_play(container):
     return scores
 
 
+#returns a list of all the scoring plays in one match specified by the ESPN gameid
 def get_match_scores(gameId):
     scoring_plays = retrieve_data(get_match_containers(gameId))
     return scoring_plays
