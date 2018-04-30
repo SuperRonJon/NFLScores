@@ -15,6 +15,8 @@ def print_scores(scores):
             print('{} good by {}'.format(score['type'], score['player']))
         elif score['type'] == 'SF':
             print('Safety by {}'.format(score['player']))
+        elif score['type'] == '2PtConv':
+            print('Conversion by {}'.format(score['player']))
         else:
             print('{} by {} for {} Yards'.format(score['type'], score['player'], score['yards']))
 
@@ -29,7 +31,7 @@ def write_to_csv(scores, filename, append=False):
         f = open(filename, 'a')
     else:
         f = open(filename, 'w')
-    
+
     if not append:
         headers = "player, type, yards, play type, passer\n"
         f.write(headers)
