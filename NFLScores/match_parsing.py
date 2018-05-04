@@ -33,6 +33,7 @@ def parse_play(container):
     no_kick = False
     no_yards = False
     new_score['type'] = container.findAll('div', {'class': 'score-type'})[0].text
+    new_score['score'] = get_game_score(container)
     headline = container.findAll('div', {'class': 'headline'})[0].text
     if headline[-1] != ')':
         no_kick = True
@@ -117,6 +118,14 @@ def get_point_after(headline):
         return conversion_score
     else:
         return None
+
+
+def get_game_score(container):
+    score1_container = container.next_sibling
+    score1 = score1_container.text
+    score2_container = score1_container.next_sibling
+    score2 = score2_container.text
+    return score1 + '-' + score2
 
 
 #returns a list of all the scoring plays in one match specified by the ESPN gameid
