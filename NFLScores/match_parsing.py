@@ -52,7 +52,7 @@ def parse_play(container):
             new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
         new_score['player'] = player_result.group(1).strip()
     else:
-        new_score['player'] = re.search('\D+?(?=\sSafety)',headline, re.IGNORECASE).group(0)
+        new_score['player'] = new_score['team'].upper() + " DEFENSE" #re.search('\D+?(?=\sSafety)',headline, re.IGNORECASE).group(0)
         new_score['yards'] = 'NA'
     #if the score was a touchdown, extract extra information
     if new_score['type'] == 'TD':
