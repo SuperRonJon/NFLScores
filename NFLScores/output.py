@@ -33,8 +33,8 @@ def write_to_csv(scores, filename, append=False):
         f = open(filename, 'w')
 
     if not append:
-        headers = "player, type, yards, play type, passer\n"
+        headers = "team, player, type, yards, play type, passer, score\n"
         f.write(headers)
     for score in scores:
-        f.write(score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "\n")
+        f.write(score["team"] + "," + score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "," + score["score"] + "\n")
     f.close()
