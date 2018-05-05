@@ -33,7 +33,8 @@ def parse_play(container):
     no_kick = False
     no_yards = False
     new_score['type'] = container.findAll('div', {'class': 'score-type'})[0].text
-    new_score['score'] = get_game_score(container)
+    new_score['score'] = '= "' + get_game_score(container) + '"'
+    new_score['team'] = get_team_name(container)
     headline = container.findAll('div', {'class': 'headline'})[0].text
     if headline[-1] != ')':
         no_kick = True
@@ -75,7 +76,7 @@ def parse_play(container):
         if new_score['play_type'] != 'run' and new_score['play_type'] != 'pass':
             new_score['play_type'] += ' return'
         if not no_kick:
-            point_after = get_point_after(headline)
+            point_after = get_point_after(headline, new_score['team'], new_score['score'])
             if point_after is not None:
                 scores.append(point_after)
     else:
@@ -86,13 +87,15 @@ def parse_play(container):
 
 
 #checks whether or not the kick was successful, if th
-def get_point_after(headline):
+def get_point_after(headline, team, score):
     _ , kick = headline.split('(')
     kick = kick.strip(')')
     kicker, result = kick.rsplit(' ', 1)
     #if the point after is a successful kick, record that score
     if result == 'Kick':
         kick_score = {}
+        kick_score['team'] = team
+        kick_score['score'] = score
         kick_score['passer'] = 'NA'
         kick_score['type'] = 'PAT'
         kick_score['player'] = kicker
@@ -102,6 +105,8 @@ def get_point_after(headline):
     #if the point after is a successful 2 point conversion, record that score
     elif result == 'Conversion':
         conversion_score = {}
+        conversion_score['team'] = team
+        conversion_score['score'] = score
         conversion_score['type'] = '2PtConv'
         conversion_score['yards'] = 'NA'
         player1 = re.search('(\D+)(?:Run|Pass)', kick).group(1).strip()
@@ -126,6 +131,12 @@ def get_game_score(container):
     score2_container = score1_container.next_sibling
     score2 = score2_container.text
     return score1 + '-' + score2
+
+
+def get_team_name(container):
+    url = container.previous_sibling.img['src']
+    abbreviation = re.search('\/500\/(\D+).png', url).group(1)
+    return abbreviation
 
 
 #returns a list of all the scoring plays in one match specified by the ESPN gameid
