@@ -125,6 +125,8 @@ def get_point_after(headline, team, score):
         return None
 
 
+#parses the game score after the current scoring play from the container
+#returns a string containing the score format "{Home Team}-{Away Team}"
 def get_game_score(container):
     score1_container = container.next_sibling
     score1 = score1_container.text
@@ -133,6 +135,8 @@ def get_game_score(container):
     return score1 + '-' + score2
 
 
+#parses the abbreviation for the scoring team's name from the container
+#returns a string containing the scoring team's abbreviation, ex 'jax'
 def get_team_name(container):
     url = container.previous_sibling.img['src']
     abbreviation = re.search('\/500\/(\D+).png', url).group(1)
