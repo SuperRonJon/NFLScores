@@ -86,7 +86,9 @@ def parse_play(container):
     return scores
 
 
-#checks whether or not the kick was successful, if th
+#gets the point after attempt information
+#returns a score object containing information about the point after attempt score
+#returns none if there was no successful point after attempt
 def get_point_after(headline, team, score):
     _ , kick = headline.split('(')
     kick = kick.strip(')')
