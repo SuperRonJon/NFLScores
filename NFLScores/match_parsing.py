@@ -95,22 +95,12 @@ def get_point_after(headline, team, score):
     kicker, result = kick.rsplit(' ', 1)
     # if the point after is a successful kick, record that score
     if result == 'Kick':
-        kick_score = {}
-        kick_score['team'] = team
-        kick_score['score'] = score
-        kick_score['passer'] = 'NA'
-        kick_score['type'] = 'PAT'
-        kick_score['player'] = kicker
-        kick_score['yards'] = 'NA'
-        kick_score['play_type'] = 'PAT'
+        kick_score = {'team': team, 'score': score, 'passer': 'NA', 'type': 'PAT', 'player': kicker, 'yards': 'NA',
+                      'play_type': 'PAT'}
         return kick_score
     # if the point after is a successful 2 point conversion, record that score
     elif result == 'Conversion':
-        conversion_score = {}
-        conversion_score['team'] = team
-        conversion_score['score'] = score
-        conversion_score['type'] = '2PtConv'
-        conversion_score['yards'] = 'NA'
+        conversion_score = {'team': team, 'score': score, 'type': '2PtConv', 'yards': 'NA'}
         player1 = re.search('(\D+)(?:Run|Pass)', kick).group(1).strip()
         player_removed = kick[len(player1):].strip()
         conversion_score['play_type'] = player_removed.split(' ', 1)[0].lower()
