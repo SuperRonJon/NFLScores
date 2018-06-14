@@ -2,6 +2,7 @@ stats.json
 __pycache__
 build/
 dist/
+.idea/
 *.pyc
 *.pyo
 output/
