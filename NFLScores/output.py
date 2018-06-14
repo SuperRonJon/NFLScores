@@ -1,8 +1,7 @@
 import json
-from match_parsing import get_match_scores, get_week_scores
 
 
-#prints the cores in a readable way for testing purposes
+# prints the cores in a readable way for testing purposes
 def print_scores(scores):
     for score in scores:
         if score['type'] == 'FG':
@@ -10,7 +9,8 @@ def print_scores(scores):
         elif score['play_type'] == 'run':
             print('{} run by {} for {} Yards'.format(score['type'], score['player'], score['yards']))
         elif score['play_type'] == 'pass':
-            print('{} pass from {} to {} for {} Yards'.format(score['type'], score['passer'], score['player'], score['yards']))
+            print('{} pass from {} to {} for {} Yards'.format(score['type'], score['passer'], score['player'],
+                                                              score['yards']))
         elif score['type'] == 'PAT':
             print('{} good by {}'.format(score['type'], score['player']))
         elif score['type'] == 'SF':
@@ -36,5 +36,6 @@ def write_to_csv(scores, filename, append=False):
         headers = "team, player, type, yards, play type, passer, score\n"
         f.write(headers)
     for score in scores:
-        f.write(score["team"] + "," + score["player"] + "," + score["type"] + "," + score["yards"] + "," + score["play_type"] + "," + score["passer"] + "," + score["score"] + "\n")
+        f.write(score["team"] + "," + score["player"] + "," + score["type"] + "," + score["yards"] + "," + score[
+            "play_type"] + "," + score["passer"] + "," + score["score"] + "\n")
     f.close()
