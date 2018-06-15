@@ -6,5 +6,4 @@ dist/
 *.pyc
 *.pyo
 output/
-main*.py
 *.spec
