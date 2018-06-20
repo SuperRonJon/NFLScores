@@ -1,5 +1,5 @@
 # NFLScores
-A python script to webscrape scoring plays in the NFL
+A python script to webscrape scoring plays in the NFL and export them to a csv file
 
 Currently a work in progress.
 
