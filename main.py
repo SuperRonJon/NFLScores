@@ -9,6 +9,7 @@ while file_type.lower() != 'csv' and file_type.lower() != 'json':
 filename = input('Enter filename: ')
 
 if file_type.lower() == 'csv':
+    filename += ".csv"
     for week in weeks:
         scores = nfl.get_week_scores(year, week)
         if weeks.index(week) == 0:
@@ -16,6 +17,7 @@ if file_type.lower() == 'csv':
         else:
             nfl.write_to_csv(scores, filename, append=True)
 elif file_type.lower() == 'json':
+    filename += ".json"
     scores = []
     for week in weeks:
         scores.append(nfl.get_week_scores(year, week))
