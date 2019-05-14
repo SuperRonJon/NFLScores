@@ -7,12 +7,7 @@ from bs4 import BeautifulSoup as Soup
 
 # get all the containers on the page that include information on each score
 def get_match_containers(game_id):
-    # connecting to client and downloading page information
-    match_url = 'http://www.espn.com/nfl/game?gameId=' + str(game_id)
-    u_client = ureq(match_url)
-    page_html = u_client.read()
-    u_client.close()
-    page_soup = Soup(page_html, 'html.parser')
+    page_soup = game_soup(game_id)
     containers = page_soup.findAll('td', {'class': 'game-details'})
     return containers
 
@@ -141,6 +136,35 @@ def get_team_name(container):
 def get_match_scores(gameId):
     scoring_plays = retrieve_data(get_match_containers(gameId))
     return scoring_plays
+
+
+# returns the teams and scores for a given game
+def get_game_info(gameId):
+    page_soup = game_soup(gameId)
+    return_data = dict()
+    return_data['game_id'] = gameId
+
+    team1_city, team2_city = [city.text for city in page_soup.findAll('span', {'class': 'long-name'})]
+    team1_name, team2_name = [team.text for team in page_soup.findAll('span', {'class': 'short-name'})]
+    team1 = f'{team1_city} {team1_name}'
+    team2 = f'{team2_city} {team2_name}'
+
+    return_data['team1'] = team1
+    return_data['team2'] = team2
+
+    team1_score, team2_score = [score.text for score in page_soup.findAll('div', {'class': 'score'})]
+    return_data['team1_score'] = team1_score
+    return_data['team2_score'] = team2_score
+
+    return return_data
+
+
+def game_soup(gameId):
+    match_url = 'http://www.espn.com/nfl/game?gameId=' + str(gameId)
+    u_client = ureq(match_url)
+    page_html = u_client.read()
+    u_client.close()
+    return Soup(page_html, 'html.parser')
 
 
 # gets all match ids from a specified NFL week via espn APIs
