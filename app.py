@@ -22,3 +22,6 @@ def team_week(year, week, team):
     response = jsonify(team_scores)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+
+app.run()
