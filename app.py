@@ -21,19 +21,40 @@ def index():
 @app.route('/scores/<year>/<week>')
 def week_scores(year, week):
     query = {'week': week, 'year': year}
-    if db.weekdata.count_documents({'week': week, 'year': year}) == 0:
-        print('from scrape')
+    if db.weekdata.count_documents(query) == 0:
         info = nfl.get_week_info(year, week)
         db.weekdata.insert_one(info)
         response = jsonify(info['games'])
+    else:
+        week_data = db.weekdata.find(query, {'games': True})
+        response = jsonify(week_data[0]['games'])
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/scores/<gameid>')
+def game_scores(gameid):
+    query = {'game_id': gameid}
+    if db.gamedata.count_documents(query) == 0:
+        print('From scrape')
+        games = dict()
+        games['game_id'] = gameid
+        games['scores'] = nfl.get_match_scores(gameid)
+        games['info'] = nfl.get_match_info(gameid)
+        response = jsonify(games)
+        db.gamedata.insert_one(games)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     else:
         print('from db')
-        week_data = db.weekdata.find(query, {'games': True})
-        response = jsonify(week_data[0]['games'])
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+        game_data = db.gamedata.find(query)[0]
+        res_data = {'game_id': game_data['game_id'], 'scores': game_data['scores'], 'info': game_data['info']}
+        response = jsonify(res_data)
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 
 
 
