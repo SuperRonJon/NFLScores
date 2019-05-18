@@ -139,10 +139,9 @@ def get_match_scores(gameId):
 
 
 # returns the teams and scores for a given game
-def get_game_info(gameId):
+def get_match_info(gameId):
     page_soup = game_soup(gameId)
     return_data = dict()
-    return_data['game_id'] = gameId
 
     team1_city, team2_city = [city.text for city in page_soup.findAll('span', {'class': 'long-name'})]
     team1_name, team2_name = [team.text for team in page_soup.findAll('span', {'class': 'short-name'})]
