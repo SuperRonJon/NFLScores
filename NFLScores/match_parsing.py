@@ -167,23 +167,26 @@ def game_soup(gameId):
     return Soup(page_html, 'html.parser')
 
 
-def get_week_data(year, week):
+def get_week_info(year, week):
     url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl' \
              '/scoreboard?lang=en&region=us&calendartype=blacklist&limit=100&dates=' + \
              str(year) + '&seasontype=2&week=' + str(week)
 
     data = requests.get(url).json()
-    events_data = list()
+    events_data = dict()
+    events_data['year'] = year
+    events_data['week'] = week
+    events_data['games'] = list()
     for event in data['events']:
         if event['status']['type']['completed']:
             event_data = dict()
             event_data['id'] = event['id']
             event_data['name'] = event['name']
             event_data['short'] = event['shortName']
-            events_data.append(event_data)
+            events_data['games'].append(event_data)
 
     return events_data
-        
+
 
 # gets all match ids from a specified NFL week via espn APIs
 def get_match_ids(year, week):
