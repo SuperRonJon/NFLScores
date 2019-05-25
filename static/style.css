@@ -1,0 +1,10 @@
+.match-result{
+    text-align: center;
+    flex: 1 1 2;
+}
+
+#results{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
