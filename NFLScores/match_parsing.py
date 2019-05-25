@@ -145,8 +145,8 @@ def get_match_info(gameId):
 
     team1_city, team2_city = [city.text for city in page_soup.findAll('span', {'class': 'long-name'})]
     team1_name, team2_name = [team.text for team in page_soup.findAll('span', {'class': 'short-name'})]
-    team1 = f'{team1_city} {team1_name}'
-    team2 = f'{team2_city} {team2_name}'
+    team1 = '{} {}'.format(team1_city, team1_name)
+    team2 = '{} {}'.format(team2_city, team2_name)
 
     return_data['team1'] = team1
     return_data['team2'] = team2
