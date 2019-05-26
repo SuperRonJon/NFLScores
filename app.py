@@ -15,8 +15,12 @@ def index():
 
 @app.route('/week')
 def week_scores():
-    year = request.args['year']
-    week = request.args['week']
+    try:
+        year = request.args['year']
+        week = request.args['week']
+    except:
+        return render_template('notfound.html', title='Whoops...')
+    title = '{} Week {}'.format(year, week)
 
     query = {'week': week, 'year': year}
     if db.weekdata.count_documents(query) == 0:
@@ -27,18 +31,24 @@ def week_scores():
         week_data = db.weekdata.find(query, {'games': True})
         games = week_data[0]['games']
 
-    return render_template('week.html', games=games, year=year, week=week)
+    return render_template('week.html', games=games, year=year, week=week, title=title)
 
 
 @app.route('/match')
 def game_scores():
-    gameid = request.args['id']
+    try:
+        gameid = request.args['id']
+    except:
+        return render_template('notfound.html', title='Whoops...')
     query = {'game_id': gameid}
     if db.gamedata.count_documents(query) == 0:
         game = dict()
         game['game_id'] = gameid
         game['scores'] = nfl.get_match_scores(gameid)
-        game['info'] = nfl.get_match_info(gameid)
+        try:
+            game['info'] = nfl.get_match_info(gameid)
+        except ValueError:
+            return render_template('notfound.html', title='Whoops...')
         db.gamedata.insert_one(game)
     else:
         game_data = db.gamedata.find(query)[0]
@@ -48,9 +58,9 @@ def game_scores():
     for play in game['scores']:
         plays.append(make_string(play))
     game['scores'] = plays
-    print(game)
+    title = '{} vs {}'.format(game['info']['team1'], game['info']['team2'])
 
-    return render_template('match.html', game=game)
+    return render_template('match.html', game=game, title=title)
 
 
 def make_string(play):
