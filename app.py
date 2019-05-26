@@ -34,12 +34,8 @@ def week_scores():
     return render_template('week.html', games=games, year=year, week=week, title=title)
 
 
-@app.route('/match')
-def game_scores():
-    try:
-        gameid = request.args['id']
-    except:
-        return render_template('notfound.html', title='Whoops...')
+@app.route('/match/<gameid>')
+def game_scores(gameid):
     query = {'game_id': gameid}
     if db.gamedata.count_documents(query) == 0:
         game = dict()
@@ -87,4 +83,4 @@ def make_string(play):
         result += 'Safety by {}'.format(play['player'])
     return result + " " + score
 
-app.run()
+app.run(host='0.0.0.0')

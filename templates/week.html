@@ -6,7 +6,7 @@
     {% for game in games: %}
         <div class='match-result'>
             <h6>{{ game['name'] }}</h6>
-            <a class="button" href="/match?id={{ game['id'] }}">Get Plays</a>
+            <a class="button" href="/match/{{ game['id'] }}">Get Plays</a>
         </div>
     {% endfor %}
     </div>
