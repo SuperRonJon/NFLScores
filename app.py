@@ -9,9 +9,11 @@ app = Flask(__name__)
 client = MongoClient('mongodb://localhost')
 db = client.nfls
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/week')
 def week_scores():
@@ -49,7 +51,7 @@ def game_scores(gameid):
     else:
         game_data = db.gamedata.find(query)[0]
         game = {'game_id': game_data['game_id'], 'scores': game_data['scores'], 'info': game_data['info']}
-    
+
     plays = list()
     for play in game['scores']:
         plays.append(make_string(play))
@@ -83,4 +85,6 @@ def make_string(play):
         result += 'Safety by {}'.format(play['player'])
     return result + " " + score
 
-app.run(host='0.0.0.0')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
