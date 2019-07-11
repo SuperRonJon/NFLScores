@@ -2,6 +2,9 @@
 {% block content %}
 <div class='container'>
     <h1 class="center">{{ year }} Week {{ week }}</h1>
+    <div class='center'>
+        <a class='button button-primary' href="/full_week/{{ year }}/{{ week }}">View Full Week</a>
+    </div>
     <div id='results'>
     {% for game in games: %}
         <div class='match-result'>
