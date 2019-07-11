@@ -187,6 +187,14 @@ def get_week_info(year, week):
     return events_data
 
 
+def get_full_week_data(year, week):
+    week_info = get_week_info(year, week)
+    for match in week_info['games']:
+        match['plays'] = get_match_scores(match['id'])
+    
+    return week_info
+
+
 # gets all match ids from a specified NFL week via espn APIs
 def get_match_ids(year, week):
     id_url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl' \

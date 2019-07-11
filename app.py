@@ -56,13 +56,18 @@ def game_scores(gameid):
     return response
 
 
-
-
-@app.route('/scores/<year>/<week>/<team>')
-def team_week(year, week, team):
-    all_scores = nfl.get_week_scores(year, week)
-    team_scores = [score for score in all_scores if score['team'] == team]
-    response = jsonify(team_scores)
+@app.route('/scores/full_week/<year>/<week>')
+def full_week_scores(year, week):
+    query = {'year': year, 'week': week}
+    if db.fullweek.count_documents(query) == 0:
+        week_info = nfl.get_full_week_data(year, week)
+        response = jsonify(week_info)
+        db.fullweek.insert_one(week_info)
+    else:
+        week_info = db.fullweek.find(query)[0]
+        response = {'year': week_info['year'], 'week': week_info['week'], 'games': week_info['games']}
+        response = jsonify(response)
+    
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
