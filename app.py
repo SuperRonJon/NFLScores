@@ -16,7 +16,7 @@ def index():
 
 
 @app.route('/week')
-def week_scores():
+def week_matches():
     try:
         year = request.args['year']
         week = request.args['week']
@@ -59,6 +59,24 @@ def game_scores(gameid):
     title = '{} vs {}'.format(game['info']['team1'], game['info']['team2'])
 
     return render_template('match.html', game=game, title=title)
+
+
+@app.route('/full_week/<year>/<week>')
+def week_scores(year, week):
+    query = {'week': week, 'year': year}
+    if db.fullweek.count_documents(query) == 0:
+        week_data = nfl.get_full_week_data(year, week)
+        response = week_data
+        db.fullweek.insert_one(week_data)
+    else:
+        week_data = db.fullweek.find(query)[0]
+        response = {'games': week_data['games'], 'year': week_data['year'], 'week': week_data['week']}
+    
+    for game in response['games']:
+        for play in game['plays']:
+            play['play_string'] = make_string(play)
+            
+    return render_template('full_week.html', data=response)
 
 
 def make_string(play):
