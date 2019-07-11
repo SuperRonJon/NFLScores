@@ -4,6 +4,7 @@ __pycache__
 build/
 dist/
 .idea/
+.vscode/
 *.pyc
 *.pyo
 output/
