@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='container'>
+    <h1 class='center'>{{ title }}</h1>
+    <h2 class='center'>{{ game['info']['team1_score'] }} - {{ game['info']['team2_score'] }}</h2>
+    <ul class='center'>
+        {% for play in game['scores']: %}
+            <li>{{ play }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/" class='button button-primary'>Search Again</a>
+    <form action="/update_match/{{ game['game_id'] }}" method="post">
+        <button class="button">Update Plays</button>
+    </form>
+</div>
+{% endblock %}

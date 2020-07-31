@@ -7,12 +7,7 @@ from bs4 import BeautifulSoup as Soup
 
 # get all the containers on the page that include information on each score
 def get_match_containers(game_id):
-    # connecting to client and downloading page information
-    match_url = 'http://www.espn.com/nfl/game?gameId=' + str(game_id)
-    u_client = ureq(match_url)
-    page_html = u_client.read()
-    u_client.close()
-    page_soup = Soup(page_html, 'html.parser')
+    page_soup = game_soup(game_id)
     containers = page_soup.findAll('td', {'class': 'game-details'})
     return containers
 
@@ -44,7 +39,7 @@ def parse_play(container):
         player_result = re.search('^(\D+)(?:\d|Interception|Fumble|Defensive)', headline)
         # if the play was an interception or fumble in the endzone there are no yards
         if player_result.group(0).split()[-1] == 'Interception' or player_result.group(0).split()[-1] == 'Fumble':
-            new_score['yards'] = 'NA'
+            new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
             no_yards = True
             no_yards_type = player_result.group(0).split()[-1].lower()
         elif player_result.group(0).split()[-1] == 'Defensive':
@@ -141,6 +136,63 @@ def get_team_name(container):
 def get_match_scores(gameId):
     scoring_plays = retrieve_data(get_match_containers(gameId))
     return scoring_plays
+
+
+# returns the teams and scores for a given game
+def get_match_info(gameId):
+    page_soup = game_soup(gameId)
+    return_data = dict()
+
+    team1_city, team2_city = [city.text for city in page_soup.findAll('span', {'class': 'long-name'})]
+    team1_name, team2_name = [team.text for team in page_soup.findAll('span', {'class': 'short-name'})]
+    team1 = '{} {}'.format(team1_city, team1_name)
+    team2 = '{} {}'.format(team2_city, team2_name)
+
+    return_data['team1'] = team1
+    return_data['team2'] = team2
+
+    team1_score, team2_score = [score.text for score in page_soup.findAll('div', {'class': 'score'})]
+    return_data['team1_score'] = team1_score
+    return_data['team2_score'] = team2_score
+
+    return return_data
+
+
+def game_soup(gameId):
+    match_url = 'http://www.espn.com/nfl/game?gameId=' + str(gameId)
+    u_client = ureq(match_url)
+    page_html = u_client.read()
+    u_client.close()
+    return Soup(page_html, 'html.parser')
+
+
+def get_week_info(year, week):
+    url = 'http://site.api.espn.com/apis/site/v2/sports/football/nfl' \
+             '/scoreboard?lang=en&region=us&calendartype=blacklist&limit=100&dates=' + \
+             str(year) + '&seasontype=2&week=' + str(week)
+
+    data = requests.get(url).json()
+    events_data = dict()
+    events_data['year'] = year
+    events_data['week'] = week
+    events_data['games'] = list()
+    for event in data['events']:
+        if event['status']['type']['completed']:
+            event_data = dict()
+            event_data['id'] = event['id']
+            event_data['name'] = event['name']
+            event_data['short'] = event['shortName']
+            events_data['games'].append(event_data)
+
+    return events_data
+
+
+def get_full_week_data(year, week):
+    week_info = get_week_info(year, week)
+    for match in week_info['games']:
+        match['plays'] = get_match_scores(match['id'])
+    
+    return week_info
 
 
 # gets all match ids from a specified NFL week via espn APIs

@@ -8,3 +8,5 @@ dist/
 *.pyo
 output/
 *.spec
+venv/
+.vscode/
