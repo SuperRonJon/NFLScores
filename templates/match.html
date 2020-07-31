@@ -9,5 +9,8 @@
         {% endfor %}
     </ul>
     <a href="/" class='button button-primary'>Search Again</a>
+    <form action="/update_match/{{ game['game_id'] }}" method="post">
+        <button class="button">Update Plays</button>
+    </form>
 </div>
 {% endblock %}

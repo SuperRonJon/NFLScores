@@ -1,6 +1,6 @@
 import re
 
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect
 from pymongo import MongoClient
 import NFLScores as nfl
 
@@ -36,6 +36,16 @@ def week_matches():
     return render_template('week.html', games=games, year=year, week=week, title=title)
 
 
+@app.route('/update_week/<year>/<week>', methods=['POST'])
+def update_week(year, week):
+    query = {'year': year, 'week': week}
+    db.weekdata.delete_many(query)
+
+    info = nfl.get_week_info(year, week)
+    db.weekdata.insert_one(info)
+    return redirect("/week?year={}&week={}".format(year, week))
+
+
 @app.route('/match/<gameid>')
 def game_scores(gameid):
     query = {'game_id': gameid}
@@ -59,6 +69,24 @@ def game_scores(gameid):
     title = '{} vs {}'.format(game['info']['team1'], game['info']['team2'])
 
     return render_template('match.html', game=game, title=title)
+
+
+@app.route('/update_match/<gameid>', methods=['POST'])
+def update_match(gameid):
+    if request.method == 'POST':
+        query = {'game_id': gameid}
+        db.game_data.delete_many(query)
+
+        game = dict()
+        game['game_id'] = gameid
+        game['scores'] = nfl.get_match_scores(gameid)
+        try:
+            game['info'] = nfl.get_match_info(gameid)
+        except ValueError:
+            pass
+        db.gamedata.insert_one(game)
+
+        return redirect('/match/' + str(gameid))
 
 
 @app.route('/full_week/<year>/<week>')

@@ -14,5 +14,8 @@
     {% endfor %}
     </div>
     <a href="/" class='button button-primary'>Search Again</a>
+    <form action="/update_week/{{ year }}/{{ week }}" method="post">
+        <button class="button">Update Data</button>
+    </form>
 </div>
 {% endblock %}
