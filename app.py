@@ -1,4 +1,5 @@
 import re
+import os
 
 from flask import Flask, jsonify, request, render_template, redirect
 from pymongo import MongoClient
@@ -6,7 +7,13 @@ import NFLScores as nfl
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb://localhost')
+if os.environ['MONGODB_URI']:
+    mongo_uri = os.environ['MONGODB_URI']
+else:
+    from secrets import mongoURI
+    mongo_uri = mongoURI
+
+client = MongoClient(mongo_uri)
 db = client.nfls
 
 
@@ -74,8 +81,8 @@ def game_scores(gameid):
 @app.route('/update_match/<gameid>', methods=['POST'])
 def update_match(gameid):
     if request.method == 'POST':
-        query = {'game_id': gameid}
-        db.game_data.delete_many(query)
+        query = {'game_id': str(gameid)}
+        db.gamedata.delete_many(query)
 
         game = dict()
         game['game_id'] = gameid
