@@ -7,9 +7,9 @@ import NFLScores as nfl
 
 app = Flask(__name__)
 
-if os.environ['MONGODB_URI']:
+try:
     mongo_uri = os.environ['MONGODB_URI']
-else:
+except KeyError:
     from secrets import mongoURI
     mongo_uri = mongoURI
 
