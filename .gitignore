@@ -10,3 +10,4 @@ output/
 *.spec
 venv/
 .vscode/
+secrets.py
