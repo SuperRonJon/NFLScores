@@ -114,6 +114,18 @@ def week_scores(year, week):
     return render_template('full_week.html', data=response)
 
 
+@app.route('/update_full_week/<year>/<week>', methods=['POST'])
+def update_full_week(year, week):
+    if request.method == 'POST':
+        query = {'week': week, 'year': year}
+        db.fullweek.delete_many(query)
+
+        week_data = nfl.get_full_week_data(year, week)
+        db.fullweek.insert_one(week_data)
+
+        return redirect('/full_week/{}/{}'.format(year, week))
+
+
 def make_string(play):
     result = ''
     score = re.search(r'\d+\-\d+', play['score']).group(0)
