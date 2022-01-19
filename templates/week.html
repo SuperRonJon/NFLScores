@@ -3,7 +3,7 @@
 <div class='container'>
     <h1 class="center">{{ year }} Week {{ week }}</h1>
     <div class='center'>
-        <a class='button button-primary' href="/full_week/{{ year }}/{{ week }}">View Full Week</a>
+        <a class='button button-primary' href="/full_week/{{ year }}/{{ week }}/{{ playoffs }}">View Full Week</a>
     </div>
     <div id='results'>
     {% for game in games: %}
@@ -14,7 +14,7 @@
     {% endfor %}
     </div>
     <a href="/" class='button button-primary'>Search Again</a>
-    <form action="/update_week/{{ year }}/{{ week }}" method="post">
+    <form action="/update_week/{{ year }}/{{ week }}/{{ playoffs }}" method="post">
         <button class="button">Update Data</button>
     </form>
 </div>

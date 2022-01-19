@@ -4,7 +4,7 @@
         <h1>NFLScores</h1>
         <form action="/week" method="GET">
             <div class="row">
-                <div class="six columns">
+                <div class="five columns">
                     <label>Year</label>
                     <select class="u-full-width" name="year" id="year" required>
                         <option value="2021">2021</option>
@@ -17,7 +17,7 @@
                         <option value="2014">2014</option>
                     </select>
                 </div>
-                <div class="six columns">
+                <div class="five columns">
                     <label>Week</label>
                     <select class="u-full-width" id="week" name="week" required>
                         <option value="1">1</option>
@@ -39,6 +39,10 @@
                         <option value="17">17</option>
                         <option value="18">18</option>
                     </select>
+                </div>
+                <div class="two columns">
+                    <label for="playoffs">Playoffs</label>
+                    <input type="checkbox" id="playoffs" name="playoffs">
                 </div>
             </div>
             <button class="button-primary">Submit</button>

@@ -29,28 +29,46 @@ def week_matches():
         week = request.args['week']
     except:
         return render_template('notfound.html', title='Whoops...')
+
+    try:
+        playoffs = request.args['playoffs']
+    except:
+        playoffs = "off"
+    
+    if playoffs == "on":
+        seasontype = 3
+    else:
+        seasontype = 2
+
     title = '{} Week {}'.format(year, week)
 
-    query = {'week': week, 'year': year}
+    query = {'week': week, 'year': year, 'seasontype': seasontype}
     if db.weekdata.count_documents(query) == 0:
-        info = nfl.get_week_info(year, week)
+        info = nfl.get_week_info(year, week, seasontype)
         db.weekdata.insert_one(info)
         games = info['games']
     else:
         week_data = db.weekdata.find(query, {'games': True})
         games = week_data[0]['games']
 
-    return render_template('week.html', games=games, year=year, week=week, title=title)
+    return render_template('week.html', games=games, year=year, week=week, playoffs=playoffs, title=title)
 
 
-@app.route('/update_week/<year>/<week>', methods=['POST'])
-def update_week(year, week):
-    query = {'year': year, 'week': week}
+@app.route('/update_week/<year>/<week>/<playoffs>', methods=['POST'])
+def update_week(year, week, playoffs):
+    redirect_link = "/week?year={}&week={}".format(year, week)
+    if playoffs == "on":
+        seasontype = 3
+        redirect_link += "&playoffs=on"
+    else:
+        seasontype = 2
+    query = {'year': year, 'week': week, 'seasontype': seasontype}
     db.weekdata.delete_many(query)
 
-    info = nfl.get_week_info(year, week)
+    info = nfl.get_week_info(year, week, seasontype)
     db.weekdata.insert_one(info)
-    return redirect("/week?year={}&week={}".format(year, week))
+
+    return redirect(redirect_link)
 
 
 @app.route('/match/<gameid>')
@@ -96,11 +114,16 @@ def update_match(gameid):
         return redirect('/match/' + str(gameid))
 
 
-@app.route('/full_week/<year>/<week>')
-def week_scores(year, week):
-    query = {'week': week, 'year': year}
+@app.route('/full_week/<year>/<week>/<playoffs>')
+def week_scores(year, week, playoffs):
+    if playoffs == "on":
+        seasontype = 3
+    else:
+        seasontype = 2
+
+    query = {'week': week, 'year': year, 'seasontype': seasontype}
     if db.fullweek.count_documents(query) == 0:
-        week_data = nfl.get_full_week_data(year, week)
+        week_data = nfl.get_full_week_data(year, week, seasontype)
         response = week_data
         db.fullweek.insert_one(week_data)
     else:
@@ -110,20 +133,33 @@ def week_scores(year, week):
     for game in response['games']:
         for play in game['plays']:
             play['play_string'] = make_string(play)
+    
+    if playoffs == "on":
+        title = "Playoffs {} week {}".format(year, week)
+    else:
+        title = "{} week {}".format(year, week)
             
-    return render_template('full_week.html', data=response)
+    return render_template('full_week.html', data=response, playoffs=playoffs, title=title)
 
 
-@app.route('/update_full_week/<year>/<week>', methods=['POST'])
-def update_full_week(year, week):
+@app.route('/update_full_week/<year>/<week>/<playoffs>', methods=['POST'])
+def update_full_week(year, week, playoffs):
+    redirect_link = '/full_week/{}/{}'.format(year, week)
+    if playoffs == "on":
+        seasontype = 3
+        redirect_link += "/on"
+    else:
+        seasontype = 2
+        redirect_link += "/off"
+
     if request.method == 'POST':
-        query = {'week': week, 'year': year}
+        query = {'week': week, 'year': year, 'seasontype': seasontype}
         db.fullweek.delete_many(query)
 
-        week_data = nfl.get_full_week_data(year, week)
+        week_data = nfl.get_full_week_data(year, week, seasontype)
         db.fullweek.insert_one(week_data)
 
-        return redirect('/full_week/{}/{}'.format(year, week))
+        return redirect(redirect_link)
 
 
 def make_string(play):
