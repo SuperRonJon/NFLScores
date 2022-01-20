@@ -3,13 +3,13 @@
 <div class='container'>
     <h1 class="center">{{ year }} Week {{ week }}</h1>
     <div class='center'>
-        <a class='button button-primary' href="/full_week/{{ year }}/{{ week }}/{{ playoffs }}">View Full Week</a>
+        <a class='button button-primary' href="/full_week?year={{ year }}&week={{ week }}&playoffs={{ playoffs }}">View Full Week</a>
     </div>
     <div id='results'>
     {% for game in games: %}
         <div class='match-result'>
             <h6>{{ game['name'] }}</h6>
-            <a class="button" href="/match/{{ game['id'] }}">Get Plays</a>
+            <a class="button" href="/match?gameid={{ game['id'] }}">Get Plays</a>
         </div>
     {% endfor %}
     </div>

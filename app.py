@@ -71,13 +71,20 @@ def update_week(year, week, playoffs):
     return redirect(redirect_link)
 
 
-@app.route('/match/<gameid>')
-def game_scores(gameid):
+@app.route('/match')
+def game_scores():
+    try:
+        gameid = request.args['gameid']
+    except:
+        return render_template('notfound.html', title='Whoops...')
     query = {'game_id': gameid}
     if db.gamedata.count_documents(query) == 0:
         game = dict()
         game['game_id'] = gameid
-        game['scores'] = nfl.get_match_scores(gameid)
+        try:
+            game['scores'] = nfl.get_match_scores(gameid)
+        except:
+            return render_template('notfound.html', title='Whoops...')
         try:
             game['info'] = nfl.get_match_info(gameid)
         except ValueError:
@@ -111,11 +118,18 @@ def update_match(gameid):
             pass
         db.gamedata.insert_one(game)
 
-        return redirect('/match/' + str(gameid))
+        return redirect('/match?gameid=' + str(gameid))
 
 
-@app.route('/full_week/<year>/<week>/<playoffs>')
-def week_scores(year, week, playoffs):
+@app.route('/full_week')
+def week_scores():
+    try:
+        year = request.args['year']
+        week = request.args['week']
+        playoffs = request.args['playoffs']
+    except:
+        return render_template('notfound.html', title='Whoops...')
+
     if playoffs == "on":
         seasontype = 3
     else:
@@ -123,7 +137,10 @@ def week_scores(year, week, playoffs):
 
     query = {'week': week, 'year': year, 'seasontype': seasontype}
     if db.fullweek.count_documents(query) == 0:
-        week_data = nfl.get_full_week_data(year, week, seasontype)
+        try:
+            week_data = nfl.get_full_week_data(year, week, seasontype)
+        except:
+            return render_template('notfound.html', title='Whoops...')
         response = week_data
         db.fullweek.insert_one(week_data)
     else:
@@ -144,13 +161,13 @@ def week_scores(year, week, playoffs):
 
 @app.route('/update_full_week/<year>/<week>/<playoffs>', methods=['POST'])
 def update_full_week(year, week, playoffs):
-    redirect_link = '/full_week/{}/{}'.format(year, week)
+    redirect_link = '/full_week?year={}&week={}'.format(year, week)
     if playoffs == "on":
         seasontype = 3
-        redirect_link += "/on"
+        redirect_link += "&playoffs=on"
     else:
         seasontype = 2
-        redirect_link += "/off"
+        redirect_link += "&playoffs=off"
 
     if request.method == 'POST':
         query = {'week': week, 'year': year, 'seasontype': seasontype}
