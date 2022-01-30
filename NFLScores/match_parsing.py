@@ -183,6 +183,7 @@ def get_week_info(year, week, seasontype=2):
             event_data['id'] = event['id']
             event_data['name'] = event['name']
             event_data['short'] = event['shortName']
+            event_data['info'] = get_match_info(event['id'])
             events_data['games'].append(event_data)
 
     return events_data

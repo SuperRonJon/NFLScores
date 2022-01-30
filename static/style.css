@@ -8,6 +8,16 @@
     text-align: center;
 }
 
+.score{
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.teams{
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
 #results{
     display: flex;
     justify-content: space-around;

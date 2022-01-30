@@ -8,7 +8,8 @@
     <div id='results'>
     {% for game in games: %}
         <div class='match-result'>
-            <h6>{{ game['name'] }}</h6>
+            <h6 class="teams">{{ game['name'] }}</h6>
+            <h6 class="score">{{ game['info']['team1_score'] }} - {{ game['info']['team2_score'] }}</h6>
             <a class="button" href="/match?gameid={{ game['id'] }}">Get Plays</a>
         </div>
     {% endfor %}

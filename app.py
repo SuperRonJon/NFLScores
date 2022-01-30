@@ -50,7 +50,7 @@ def week_matches():
     else:
         week_data = db.weekdata.find(query, {'games': True})
         games = week_data[0]['games']
-
+    
     return render_template('week.html', games=games, year=year, week=week, playoffs=playoffs, title=title)
 
 
