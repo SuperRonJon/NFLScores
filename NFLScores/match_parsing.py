@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup as Soup
 # get all the containers on the page that include information on each score
 def get_match_containers(game_id):
     page_soup = game_soup(game_id)
-    containers = page_soup.findAll('td', {'class': 'game-details'})
+    containers = page_soup.findAll('td', {'class': 'playByPlay__gameDetail'})
     return containers
 
 
@@ -29,10 +29,10 @@ def parse_play(container):
     new_score = {}
     no_kick = False
     no_yards = False
-    new_score['type'] = container.findAll('div', {'class': 'score-type'})[0].text
+    new_score['type'] = container.findAll('div', {'class': 'playByPlay__details--scoreType'})[0].text
     new_score['score'] = '= "' + get_game_score(container) + '"'
     new_score['team'] = get_team_name(container)
-    headline = container.findAll('div', {'class': 'headline'})[0].text
+    headline = container.findAll('div', {'class': 'playByPlay__details--drives--headline'})[0].text
     if headline[-1] != ')':
         no_kick = True
     if new_score['type'] != 'SF':
@@ -127,9 +127,8 @@ def get_game_score(container):
 # parses the abbreviation for the scoring team's name from the container
 # returns a string containing the scoring team's abbreviation, ex 'jax'
 def get_team_name(container):
-    url = container.previous_sibling.img['src']
-    abbreviation = re.search('\/500\/(\D+).png', url).group(1)
-    return abbreviation
+    team_name = container.previous_sibling.img['alt']
+    return team_name
 
 
 # returns a list of all the scoring plays in one match specified by the ESPN gameid
@@ -143,17 +142,14 @@ def get_match_info(gameId):
     page_soup = game_soup(gameId)
     return_data = dict()
 
-    team1_city, team2_city = [city.text for city in page_soup.findAll('span', {'class': 'long-name'})]
-    team1_name, team2_name = [team.text for team in page_soup.findAll('span', {'class': 'short-name'})]
-    team1 = '{} {}'.format(team1_city, team1_name)
-    team2 = '{} {}'.format(team2_city, team2_name)
+    team1, team2 = [team.text for team in page_soup.findAll('h2', {'class': 'ScoreCell__TeamName' })]
 
     return_data['team1'] = team1
     return_data['team2'] = team2
 
-    team1_score, team2_score = [score.text for score in page_soup.findAll('div', {'class': 'score'})]
-    return_data['team1_score'] = team1_score
-    return_data['team2_score'] = team2_score
+    team1_score, team2_score = [score.text for score in page_soup.findAll('div', {'class': 'Gamestrip__Score'})]
+    return_data['team1_score'] = re.sub(r'[^0-9]', '', team1_score)
+    return_data['team2_score'] = re.sub(r'[^0-9]', '', team2_score)
 
     return return_data
 

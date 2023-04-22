@@ -182,7 +182,7 @@ def update_full_week(year, week, playoffs):
 def make_string(play):
     result = ''
     score = re.search(r'\d+\-\d+', play['score']).group(0)
-    result += '({}) '.format(play['team'].upper())
+    result += '({}) '.format(play['team'])
     if play['type'] == 'TD':
         if play['play_type'] == 'pass':
             result += 'Pass from {} to {} for {} yards'.format(play['passer'], play['player'], play['yards'])
