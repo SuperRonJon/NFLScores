@@ -36,12 +36,15 @@ def parse_play(container):
     if headline[-1] != ')':
         no_kick = True
     if new_score['type'] != 'SF':
-        player_result = re.search('^(\D+)(?:\d|Interception|Fumble|Defensive)', headline)
+        player_result = re.search('^(\D+)(?:\d|Interception|Fumble|Defensive|interception|fumble|defensive)', headline)
         # if the play was an interception or fumble in the endzone there are no yards
-        if player_result.group(0).split()[-1] == 'Interception' or player_result.group(0).split()[-1] == 'Fumble':
-            new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
+        if player_result.group(0).split()[-1].lower() == 'interception' or player_result.group(0).split()[-1].lower() == 'fumble':
+            if 'in end zone' in headline.lower():
+                new_score['yards'] = 'NA'
+            else:
+                new_score['yards'] = re.search('\d+\sYd', headline).group(0).split()[0]
             no_yards = True
-            no_yards_type = player_result.group(0).split()[-1].lower()
+            no_yards_type = player_result.group(0).split()[-1]
         elif player_result.group(0).split()[-1] == 'Defensive':
             new_score['yards'] = 'NA'
             no_yards = True

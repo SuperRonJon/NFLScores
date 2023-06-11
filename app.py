@@ -83,7 +83,8 @@ def game_scores():
         game['game_id'] = gameid
         try:
             game['scores'] = nfl.get_match_scores(gameid)
-        except:
+        except Exception as err:
+            print("Exception getting scores:", err)
             return render_template('notfound.html', title='Whoops...')
         try:
             game['info'] = nfl.get_match_info(gameid)
@@ -189,7 +190,10 @@ def make_string(play):
         elif play['play_type'] == 'run':
             result += 'Run by {} for {} yards'.format(play['player'], play['yards'])
         else:
-            result += '{} by {} for {} yards'.format(play['play_type'], play['player'], play['yards'])
+            if play['yards'] == 'NA':
+                result += '{} by {} in the End Zone'.format(play['play_type'], play['player'])
+            else:
+                result += '{} by {} for {} yards'.format(play['play_type'], play['player'], play['yards'])
     elif play['type'] == 'PAT':
         result += 'Point after good by {}'.format(play['player'])
     elif play['type'] == 'FG':
@@ -205,4 +209,4 @@ def make_string(play):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=4444)
