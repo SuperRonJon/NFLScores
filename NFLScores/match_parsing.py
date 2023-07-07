@@ -27,6 +27,7 @@ def retrieve_data(containers):
 def parse_play(container):
     scores = []
     new_score = {}
+    point_after = None
     no_kick = False
     no_yards = False
     new_score['type'] = container.findAll('div', {'class': 'playByPlay__details--scoreType'})[0].text
@@ -77,12 +78,12 @@ def parse_play(container):
             new_score['play_type'] += ' return'
         if not no_kick:
             point_after = get_point_after(headline, new_score['team'], new_score['score'])
-            if point_after is not None:
-                scores.append(point_after)
     else:
         new_score['play_type'] = new_score['type']
         new_score['passer'] = 'NA'
     scores.append(new_score)
+    if point_after is not None:
+        scores.append(point_after)
     return scores
 
 
