@@ -209,4 +209,9 @@ def make_string(play):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4444)
+    PORT = None
+    try:
+        PORT = os.environ['PORT']
+    except KeyError:
+        PORT = 8080
+    app.run(host='0.0.0.0', port=PORT)

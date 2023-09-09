@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web: 
+    build: .
+    ports: 
+      - "8000:8000"
+  db:
+    image: "mongo"
+    volumes:
+      - db-data:/nflscores
+
+
+volumes:
+  db-data:
