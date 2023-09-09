@@ -77,6 +77,12 @@ def game_scores():
         gameid = request.args['gameid']
     except:
         return render_template('notfound.html', title='Whoops...')
+    try:
+        week_val = request.args['week']
+        year, week, playoffs = week_val.split("-")
+    except:
+        year, week, playoffs = "0", "0", "0"
+
     query = {'game_id': gameid}
     if db.gamedata.count_documents(query) == 0:
         game = dict()
@@ -101,7 +107,7 @@ def game_scores():
     game['scores'] = plays
     title = '{} vs {}'.format(game['info']['team1'], game['info']['team2'])
 
-    return render_template('match.html', game=game, title=title)
+    return render_template('match.html', game=game, title=title, year=year, week=week, playoffs=playoffs)
 
 
 @app.route('/update_match/<gameid>', methods=['POST'])
