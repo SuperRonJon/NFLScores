@@ -10,7 +10,7 @@ app = Flask(__name__)
 try:
     mongo_uri = os.environ['MONGODB_URI']
 except KeyError:
-    from secrets import mongoURI
+    from secret import mongoURI
     mongo_uri = mongoURI
 
 client = MongoClient(mongo_uri)
