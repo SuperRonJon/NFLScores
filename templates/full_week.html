@@ -5,7 +5,7 @@
     <a href="/week?year={{ data['year'] }}&week={{ data['week'] }}&playoffs={{ playoffs }}" class='button button-primary'>Back to week</a>
     <div>
         {% for game in data['games']: %}
-            <h4 class='center'>{{ game['name'] }}</h2>
+            <h4 class='center'>{{ game['name'] }}</h4>
             <ul>
                 {% for play in game['plays'] %}
                     <li>{{ play['play_string'] }}</li>
