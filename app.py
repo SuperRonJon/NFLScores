@@ -211,7 +211,7 @@ def make_string(play):
             result += 'Two point conversion run by {}'.format(play['player'])
     elif play['type'] == 'SF':
         result += 'Safety by {}'.format(play['player'])
-    return result + " " + score
+    return '{} ({})'.format(result, score)
 
 
 if __name__ == '__main__':
