@@ -152,8 +152,8 @@ def get_match_info(gameId):
     return_data['team2'] = team2
 
     team1_score, team2_score = [score.text for score in page_soup.findAll('div', {'class': 'Gamestrip__Score'})]
-    return_data['team1_score'] = re.sub(r'[^0-9]', '', team1_score)
-    return_data['team2_score'] = re.sub(r'[^0-9]', '', team2_score)
+    return_data['team1_score'] = re.search(r'^[0-9]+', team1_score).group(0)
+    return_data['team2_score'] = re.search(r'^[0-9]+', team2_score).group(0)
 
     return return_data
 
