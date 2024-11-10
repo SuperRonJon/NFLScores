@@ -8,6 +8,10 @@ services:
     image: "mongo"
     volumes:
       - db-data:/nflscores
+  proxy:
+    build: ./proxy
+    ports:
+      - "80:80"
 
 
 volumes:
