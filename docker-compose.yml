@@ -7,7 +7,7 @@ services:
   db:
     image: "mongo"
     volumes:
-      - db-data:/nflscores
+      - nflscores-data:/data/db
   proxy:
     build: ./proxy
     ports:
@@ -15,4 +15,4 @@ services:
 
 
 volumes:
-  db-data:
+  nflscores-data:
