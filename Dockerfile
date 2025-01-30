@@ -12,8 +12,6 @@ ENV PORT=8000
 
 ENV MONGODB_URI="mongodb://db:27017/"
 
-EXPOSE  8000
-
 CMD ["python", "app.py"]
 
 # For linux serving
