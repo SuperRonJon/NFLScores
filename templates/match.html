@@ -4,7 +4,7 @@
     <h1 class='center'>{{ title }}</h1>
     <h2 class='center'>{{ game['info']['team1_score'] }} - {{ game['info']['team2_score'] }}</h2>
     {% if year != '0' %}
-    <a href="/week?year={{ year }}&week={{ week }}&playoffs={{ playoffs }}" class='button button-primary'>Back to Week</a>
+    <a href="/week/{{ year }}/{{ week }}/{{ playoffs }}" class='button button-primary'>Back to Week</a>
     {% endif %}
     <ul class='center'>
         {% for play in game['scores']: %}
@@ -12,7 +12,7 @@
         {% endfor %}
     </ul>
     <a href="/" class='button button-primary'>Search Again</a>
-    <form action="/update_match/{{ game['game_id'] }}" method="post">
+    <form action="/match/{{ game['game_id'] }}" method="post">
         <button class="button">Update Plays</button>
     </form>
 </div>

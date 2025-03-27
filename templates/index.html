@@ -2,53 +2,68 @@
 {% block content %}
     <div class="container">
         <h1>NFLScores</h1>
-        <form action="/week" method="GET">
-            <div class="row">
-                <div class="five columns">
-                    <label>Year</label>
-                    <select class="u-full-width" name="year" id="year" required>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                        <option value="2015">2015</option>
-                        <option value="2014">2014</option>
-                    </select>
-                </div>
-                <div class="five columns">
-                    <label>Week</label>
-                    <select class="u-full-width" id="week" name="week" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                    </select>
-                </div>
-                <div class="two columns">
-                    <label for="playoffs">Playoffs</label>
-                    <input type="checkbox" id="playoffs" name="playoffs">
-                </div>
+        <div class="row">
+            <div class="five columns">
+                <label>Year</label>
+                <select class="u-full-width" name="year" id="year" required>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                    <option value="2016">2016</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+                </select>
             </div>
+            <div class="five columns">
+                <label>Week</label>
+                <select class="u-full-width" id="week" name="week" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                </select>
+            </div>
+            <div class="two columns">
+                <label for="playoffs">Post Season</label>
+                <select class="u-full-width" id="playoffs" name="playoffs" required>
+                    <option value="off">off</option>
+                    <option value="on">on</option>
+                </select>
+
+            </div>
+        </div>
+        <form id="submit-form" onsubmit="submitWeek()">
             <button class="button-primary">Submit</button>
         </form>
     </div>
+    <script>
+        function submitWeek() {
+            const weekForm = document.getElementById('submit-form');
+            const year = document.getElementById('year').value;
+            const week = document.getElementById('week').value;
+            const playoffs = document.getElementById('playoffs').value;
+            const weekUrl = `/week/${year}/${week}/${playoffs}`;
+            weekForm.action = weekUrl;
+            console.log("weekUrl", weekUrl);
+        }
+    </script>
 {% endblock %}

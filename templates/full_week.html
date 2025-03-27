@@ -2,7 +2,7 @@
 {% block content %}
 <div class='container'>
     <h1 class='center'>{{ data['year'] }} Week {{ data['week'] }}</h1>
-    <a href="/week?year={{ data['year'] }}&week={{ data['week'] }}&playoffs={{ playoffs }}" class='button button-primary'>Back to week</a>
+    <a href="/week/{{ data['year'] }}/{{ data['week'] }}/{{ playoffs }}" class='button button-primary'>Back to week</a>
     <div>
         {% for game in data['games']: %}
             <h4 class='center'>{{ game['name'] }}</h4>
@@ -14,7 +14,7 @@
         {% endfor %}
     </div>
     <a href="/" class='button button-primary'>Search Again</a>
-    <form action="/update_full_week/{{ data['year'] }}/{{ data['week'] }}/{{ playoffs }}" method="post">
+    <form action="/full_week/{{ data['year'] }}/{{ data['week'] }}/{{ playoffs }}" method="POST">
         <button class="button">Update Data</button>
     </form>
 </div>
