@@ -10,12 +10,6 @@ COPY . .
 
 ENV PORT=8000
 
-ENV MONGODB_URI="mongodb://db:27017/"
+ENV MONGODB_URI="mongodb://localhost:27017/"
 
-CMD ["python", "app.py"]
-
-# For linux serving
-# CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0", "app:app"]
-
-# For windows serving - waitress needs to be added to requirements.txt and installed to use this
-# CMD ["waitress-serve", "--port=8000","app:app"]
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0", "app:app"]
