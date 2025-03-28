@@ -1,7 +1,8 @@
 import re
 import os
+import sys
 
-from flask import Flask, jsonify, request, render_template, redirect
+from flask import Flask, request, render_template, redirect
 from pymongo import MongoClient
 import NFLScores as nfl
 
@@ -10,8 +11,12 @@ app = Flask(__name__)
 try:
     mongo_uri = os.environ['MONGODB_URI']
 except KeyError:
-    from secret import mongoURI
-    mongo_uri = mongoURI
+    try:
+        from secret import mongoURI
+        mongo_uri = mongoURI
+    except ModuleNotFoundError:
+        print("No databse uri found, please set environment variable MONGODB_URI=<db-location>:27017")
+        sys.exit()
 
 client = MongoClient(mongo_uri)
 db = client.nfls
